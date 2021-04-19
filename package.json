@@ -4,11 +4,13 @@
   "description": "barcode app for sns for inv movement",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile:sass": "node-sass sass/main.scss public/style.css -w"
   },
   "author": "Sahil Sharma",
   "license": "ISC",
   "dependencies": {
+    "activedirectory": "^0.7.2",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "cookie-session": "^1.4.0",
@@ -16,6 +18,10 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "morgan": "^1.10.0",
-    "passport": "^0.4.1"
+    "msnodesqlv8": "^2.0.15",
+    "mssql": "^6.3.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "sha256": "^0.2.0"
   }
 }

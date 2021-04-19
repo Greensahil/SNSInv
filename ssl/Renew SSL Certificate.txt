@@ -1,0 +1,39 @@
+Renewing\Updating SSL Certificate
+
+1. Go to www.sslforfree.com
+2. Generate a Wildcard Certificate  :  *.rroese.com
+3. Edit TXT records on Tierra.net DNS settings for rroese.com
+4. Download Cert Package
+5. Extract to folder on Desktop
+6. Go to https://decoder.link/converter and input all files. Make sure it is set to convert "PEM TO PKCS#12"
+
+7. Copy files from desktop folder to G:\DEPT\IT\Software\SSL\Wild Card rroese
+8. Login to SECTS02
+9. Open IIS Manager
+10. Open on Server Certificates
+11. Import new Cert
+12. Remove old Cert
+13. Navigate to Sites->cusipayment
+14. Right click on cusipayment site and Edit Bindings
+15. Update HTTPS binding on port 1443 to use new Cert
+16. Log off SECTS02
+
+
+17. Login to RRCSW01
+18. Navigate to C:\Program Files (x86)\Spiceworks\httpd\ssl
+19. Copy new SSL Cert and Private key to RRCSW01 desktop
+20. Rename cert and private key to to ssl-cert.pem and ssl-private-key.pem
+21. Replace corresponding files in C:\Program Files (x86)\Spiceworks\httpd\ssl with new files
+22. Restart SpiceWorks services or restart server
+23. Log off RRCSW01
+
+
+24. Login to RRCRS03
+25. Open Remote Desktop Gateway Manager
+26. Right click RRCRS03 in left side menu & select properties
+27. Click SSL Certificate tab
+28. Select "Import a certificate into the RD Gateway RRCRS03..." option, and select Browse and Import
+29. Navigate to and import new Certificate
+30. Select "Select an existing certificate from the RD Gateway RRCRS03..." and select Import Certificate
+31. Select and import new Certificate
+32. Log off RRCRS03

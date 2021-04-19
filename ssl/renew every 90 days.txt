@@ -1,0 +1,12 @@
+openssl pkcs12 -export -out "roesewild.pfx" -inkey "private.key" -in "certificate.crt" -certfile ca_bundle.crt
+
+
+export SSL for Free zip file from download to a directory, change command prompt to that directory
+run below command in command prompt from roese242
+
+"C:\Program Files\OpenSSL-Win64\bin\openssl" pkcs12 -export -out "roesewild.pfx" -inkey "private.key" -in "certificate.crt" -certfile ca_bundle.crt
+
+
+sects - IIS install combined file update bindings for cusipayments
+support - shortcut on desktop - open ssl folder rename private key name and certificate name after copying orginal files from zip file
+vpn - remote desktop manager - right click server name - properties, SSL Cer tab, import cert ( third option), select middle option for select cert and t 
