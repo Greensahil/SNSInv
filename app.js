@@ -11,7 +11,7 @@ const fs = require('fs');
 const https = require('https');
 const http = require('http')
 //const database = require('./src/databaseFuntions')
-
+require('./src/schemacheck/schemaCheckMain')
 
 dotenv.config();
 

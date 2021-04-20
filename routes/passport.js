@@ -4,6 +4,7 @@ const sha = require('sha256')
 const activeDirectory = require('activedirectory');
 const keys = require('../config/keys')
 const sql = require('mssql/msnodesqlv8');
+const connection = require('../middleware/database').snsDBConnection
 const database = require('../src/databaseFunctions')
 
 
