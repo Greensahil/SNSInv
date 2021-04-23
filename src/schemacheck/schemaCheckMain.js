@@ -101,6 +101,16 @@ async function UpdateSchema_0_0_1() {
             PasswordHash varchar(100) NOT NULL,
             ActiveDirectoryAuth BIT NOT NULL DEFAULT 0
         );`)
+        
+        await request.query(`CREATE PROCEDURE usp_web_getUserInfo(@userID as VARCHAR(15)) AS
+                            SELECT * FROM Users where UserID = @userID
+        `)
+
+        await request.query(`CREATE PROCEDURE usp_web_verifyUser(@userID as varchar(20), @passwordHash as varchar(100)) AS
+        SELECT * FROM Users where userID = @userID and passwordHash = @passwordHash`)
+        
+        await request.query(`CREATE PROCEDURE usp_web_createLocalUserFromAD(@userID as varchar(20),@passwordHash as varchar(70)) AS
+        Insert into Users(UserID, UserName,PasswordHash,ActiveDirectoryAuth) values(@userID, @userID,@passwordHash,1)`)
 
         await SetSchemaVersion("0.0.1")
 

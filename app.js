@@ -12,6 +12,7 @@ const https = require('https');
 const http = require('http')
 //const database = require('./src/databaseFuntions')
 require('./src/schemacheck/schemaCheckMain')
+const handleError = require('./src/handleError')
 
 dotenv.config();
 
@@ -84,8 +85,11 @@ app.use(async function (req, res, next) {
 //Routes
 
 const landing = require('./routes/landing.js');
+const authenticate = require('./routes/auth.js')
+
 
 app.use(landing)
+app.use(authenticate)
 
 
 //Custom error handling middleware. Express will not use its default error handling middleware if this is present

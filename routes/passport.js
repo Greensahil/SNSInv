@@ -47,7 +47,7 @@ module.exports = function(passport) {
             
              let result = await pool.request()
              .input('employeeID', sql.VarChar(20), employeeID)
-             .execute('usp_web_getEmployeesInfo')
+             .execute('usp_web_getUserInfo')
 
               if(!result.recordset[0]){
                 return done(null,false);
@@ -81,7 +81,7 @@ module.exports = function(passport) {
                     let result = await pool.request()
                     .input('userID', sql.VarChar(20), name)
                     .input('password', sql.VarChar(70), hash)
-                    .execute('usp_web_verifyEmployee')
+                    .execute('usp_web_verifyUser')
 
 
                     if (!result.recordset.length) {
@@ -149,7 +149,7 @@ module.exports = function(passport) {
                                let result = await pool.request()
                                .input('userID', sql.VarChar(20), name)
                                .input('password', sql.VarChar(70), hash)
-                               .execute('usp_web_verifyEmployee')
+                               .execute('usp_web_verifyUser')
 
 
                                 console.log(result.recordset[0]);
