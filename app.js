@@ -71,9 +71,7 @@ app.use(async function (req, res, next) {
         res.locals.success = req.flash("success");
         res.locals.message = req.flash("message");
         res.locals.invalidAuth = req.flash("invalidAuth");
-        if(req.user){
-            res.locals.employeeStatus = await database.getEmployeeStatus(req.user.EmployeeID)
-        }
+        
         
         next()
     }

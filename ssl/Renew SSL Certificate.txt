@@ -24,7 +24,7 @@ Renewing\Updating SSL Certificate
 19. Copy new SSL Cert and Private key to RRCSW01 desktop
 20. Rename cert and private key to to ssl-cert.pem and ssl-private-key.pem
 21. Replace corresponding files in C:\Program Files (x86)\Spiceworks\httpd\ssl with new files
-22. Restart SpiceWorks services or restart server
+22. Restart SpiceWorks scanSection or restart server
 23. Log off RRCSW01
 
 

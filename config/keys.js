@@ -16,7 +16,8 @@ module.exports={
         user:process.env.db_prod_user,
         password:process.env.db_prod_password,
         server:process.env.db_prod_server ,
-        database:process.env.db_prod_database,
+        webDatabase:process.env.db_prod_Webdatabase,
+        invDatabase:process.env.db_prod_Invdatabase,
         instance:process.env.db_prod_instanceName,
         state:process.env.dbState
     },

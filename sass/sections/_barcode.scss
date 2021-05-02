@@ -1,0 +1,41 @@
+body{
+    text-align: center;
+  }
+  
+  i.barcode-icon {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    height: 40px;
+    background:linear-gradient(to right, #000 0%, #000 3%, transparent 3%, transparent 5%, #000 5%, #000 9%, transparent 9%, transparent 12%, #000 12%, #000 13%, transparent 13%, transparent 14%, #000 14%, #000 16%, transparent 16%, transparent 18%, #000 18%, #000 21%, transparent 21%, transparent 23%, #000 23%, #000 27%, transparent 27%, #000 27%, #000 32%, transparent 32%, transparent 36%, #000 36%, #000 38%, transparent 38%,transparent 40%, #000 40%, #000 41%, transparent 41%, transparent 44%, #000 44%, #000 47%, transparent 47%, transparent 50%, #000 50%, #000 53%, transparent 53%, transparent 54%, #000 54%, #000 58%, transparent 58%, #000 58%, #000 60%, transparent 60%, transparent 62%, #000 62%, #000 64%, transparent 64%, transparent 65%, #000 65%, #000 68%, transparent 68%, transparent 70%, #000 70%, #000 71%, transparent 71%, transparent 74%, #000 74%, #000 78%, transparent 78%, transparent 82%, #000 82%, #000 85%, transparent 85%, transparent 88%, #000 88%, #000 91%, transparent 91%, transparent 94%, #000 94%, #000 95%, transparent 95%, transparent 97%, #000 97%, #000 98%, transparent 98%, transparent 99%, #000 99% );
+    
+    &:after {
+      content:'';
+      position: absolute;
+      top: 50%;
+      left: 0;right: 0;
+      height: 2px;
+      background:#f33;
+      box-shadow: 0 0 12px 2px red;
+      border-radius:100px;
+      opacity:.8;
+      animation: scan 8s infinite ease-in-out;
+    }
+    
+  }
+  
+  @keyframes scan {
+    0% {
+      transform:translateY(0);
+    }
+    10% {
+      transform:translateY(-20px);
+    }
+    30% {
+      transform:translateY(20px);
+    } 
+    40% {
+      transform:translateY(0);
+    }
+  }
+  

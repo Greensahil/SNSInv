@@ -1,4 +1,4 @@
-const connection = require('../../middleware/database').snsDBConnection;
+const connection = require('../../middleware/database').snsWebDBConnection;
 
 module.exports = async function buildCoreSchemas(){
     let pool = await connection;

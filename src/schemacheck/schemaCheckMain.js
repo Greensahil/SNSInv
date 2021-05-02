@@ -1,5 +1,5 @@
 let CurDBSchema = "0.0.1"
-const connection = require('../../middleware/database').snsDBConnection;
+const connection = require('../../middleware/database').snsWebDBConnection;
 // const database = require('../databaseFuntions')
 const buildVersion0 = require('./buildToVersion1.js')
 
@@ -98,7 +98,8 @@ async function UpdateSchema_0_0_1() {
         await request.query(`CREATE TABLE Users (
             UserID VARCHAR(15) NOT NULL CONSTRAINT PKID_Users PRIMARY KEY,
             UserName VARCHAR(50) NOT NULL,
-            PasswordHash varchar(100) NOT NULL,
+            PasswordHash varchar(100),
+            Pin varchar(10),
             ActiveDirectoryAuth BIT NOT NULL DEFAULT 0
         );`)
         
@@ -111,6 +112,12 @@ async function UpdateSchema_0_0_1() {
         
         await request.query(`CREATE PROCEDURE usp_web_createLocalUserFromAD(@userID as varchar(20),@passwordHash as varchar(70)) AS
         Insert into Users(UserID, UserName,PasswordHash,ActiveDirectoryAuth) values(@userID, @userID,@passwordHash,1)`)
+        
+
+        //FIX ME - REMOVE IN PRODUCTION
+        await request.query(`
+        INSERT INTO USERS(UserID, UserName, PIN)
+        VALUES('Admin','Admin', 9874);`)    
 
         await SetSchemaVersion("0.0.1")
 

@@ -7294,6 +7294,88 @@ img::-moz-selection {
       #mainNav .navbar-nav .nav-item:last-child {
         margin-right: 0; } }
 
+/**
+ * @author Script47 (https://github.com/Script47/Toast)
+ * @description Toast - A Bootstrap 4.2+ jQuery plugin for the toast component
+ * @version 0.7.1
+ **/
+.toast-container {
+  position: fixed;
+  z-index: 1055;
+  margin: 5px; }
+
+.top-right {
+  top: 0;
+  right: 0; }
+
+.top-left {
+  top: 0;
+  left: 0; }
+
+.top-center {
+  transform: translateX(-50%);
+  top: 0;
+  left: 50%; }
+
+.bottom-right {
+  right: 0;
+  bottom: 0; }
+
+.bottom-left {
+  left: 0;
+  bottom: 0; }
+
+.bottom-center {
+  transform: translateX(-50%);
+  bottom: 0;
+  left: 50%; }
+
+.toast-container > .toast {
+  min-width: 150px;
+  background: 0 0;
+  border: none; }
+
+.toast-container > .toast > .toast-header {
+  border: none; }
+
+.toast-container > .toast > .toast-header strong {
+  padding-right: 20px; }
+
+.toast-container > .toast > .toast-body {
+  background: #fff; }
+
+body {
+  text-align: center; }
+
+i.barcode-icon {
+  display: inline-block;
+  position: relative;
+  width: 100px;
+  height: 40px;
+  background: linear-gradient(to right, #000 0%, #000 3%, transparent 3%, transparent 5%, #000 5%, #000 9%, transparent 9%, transparent 12%, #000 12%, #000 13%, transparent 13%, transparent 14%, #000 14%, #000 16%, transparent 16%, transparent 18%, #000 18%, #000 21%, transparent 21%, transparent 23%, #000 23%, #000 27%, transparent 27%, #000 27%, #000 32%, transparent 32%, transparent 36%, #000 36%, #000 38%, transparent 38%, transparent 40%, #000 40%, #000 41%, transparent 41%, transparent 44%, #000 44%, #000 47%, transparent 47%, transparent 50%, #000 50%, #000 53%, transparent 53%, transparent 54%, #000 54%, #000 58%, transparent 58%, #000 58%, #000 60%, transparent 60%, transparent 62%, #000 62%, #000 64%, transparent 64%, transparent 65%, #000 65%, #000 68%, transparent 68%, transparent 70%, #000 70%, #000 71%, transparent 71%, transparent 74%, #000 74%, #000 78%, transparent 78%, transparent 82%, #000 82%, #000 85%, transparent 85%, transparent 88%, #000 88%, #000 91%, transparent 91%, transparent 94%, #000 94%, #000 95%, transparent 95%, transparent 97%, #000 97%, #000 98%, transparent 98%, transparent 99%, #000 99%); }
+  i.barcode-icon:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #f33;
+    box-shadow: 0 0 12px 2px red;
+    border-radius: 100px;
+    opacity: .8;
+    animation: scan 8s infinite ease-in-out; }
+
+@keyframes scan {
+  0% {
+    transform: translateY(0); }
+  10% {
+    transform: translateY(-20px); }
+  30% {
+    transform: translateY(20px); }
+  40% {
+    transform: translateY(0); } }
+
 header.masthead {
   padding-top: 10.5rem;
   padding-bottom: 6rem;
@@ -7596,3 +7678,143 @@ section#contact {
   text-align: center;
   font-size: 0.9rem;
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
+
+.login-container .login-content {
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  padding: 40px;
+  min-width: 300px;
+  min-height: 300px;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  transition: all 0.2s ease-out;
+  transition-delay: 0s;
+  transition-delay: 0.2s; }
+
+.login_back {
+  margin: 0px;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  background: url(../img/login-bg.jpg) no-repeat;
+  background-size: auto;
+  background-size: cover;
+  align-items: center;
+  justify-content: center; }
+
+.login_front {
+  display: flex; }
+
+.login_card {
+  padding: 0;
+  width: 100%;
+  margin: 30px auto;
+  position: relative;
+  border-radius: 8px;
+  background: #1c1c1c;
+  border: 1px solid #b5b5b5; }
+
+.login-header {
+  color: #fff;
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+  background: #dcdcdc;
+  min-height: 50px;
+  font-weight: 700;
+  text-align: center;
+  align-items: center;
+  text-transform: uppercase;
+  border-radius: 8px 8px 0 0; }
+
+.login-header img {
+  height: 40px; }
+
+.login_wrapper {
+  width: 75%;
+  padding: 0;
+  margin: 20px auto 0px; }
+
+.login_wrapper .user_input {
+  background: url(../img/user-icon.png) 10px center no-repeat;
+  background-size: 18px; }
+
+.login_wrapper .pass_input {
+  background: url(../img/password-icon.png) 10px center no-repeat;
+  background-size: 18px; }
+
+.login_wrapper .form-control {
+  width: 100%;
+  border: none;
+  height: 45px;
+  display: block;
+  color: #c1c1c1;
+  font-size: 15px;
+  padding: 10px 45px;
+  border-radius: 0px;
+  margin-bottom: 15px;
+  background: #252525;
+  box-sizing: border-box;
+  border-left: 3px solid #B11B20;
+  border-bottom: 1px solid #1c1c1c;
+  -moz-box-shadow: 0 1px 0 0 #000;
+  -webkit-box-shadow: 0 1px 0 0 #000;
+  box-shadow: 0 1px 0 0 #000; }
+
+.login_ftrmy {
+  margin-top: 70px;
+  text-align: center;
+  background: #232323;
+  padding: 30px 0px 30px;
+  border-radius: 0 0 8px 8px; }
+
+.login_ftrmy .btn.btn-primary {
+  outline: 0;
+  width: 70%;
+  color: #fff;
+  height: 46px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  background: #B11B20;
+  border-radius: 30px;
+  border: transparent;
+  letter-spacing: 0.33px;
+  box-sizing: border-box;
+  text-transform: uppercase; }
+
+.login-footer {
+  display: flex;
+  overflow: hidden;
+  margin: 20px 0px;
+  align-items: center;
+  justify-content: center; }
+
+.login-footer img {
+  height: 40px; }
+
+.login-footer span {
+  flex: 1; }
+
+.powered_by {
+  display: block; }
+
+@media only screen and (max-width: 767px) {
+  .login-header {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase; }
+  .login-footer {
+    display: block;
+    margin-top: 15px; }
+  .login-footer img {
+    margin-top: 15px; }
+  .login-container .login-content {
+    padding: 40px 0; }
+  .login_wrapper .form-control {
+    padding: 10px 15px; } }

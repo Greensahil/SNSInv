@@ -5,6 +5,7 @@ var middleware={}
 
 
 
+
 //Adding this class so that I can use Promises on MySQL database. This class just wraps around the function and allows me to consume the promises
 
 middleware.isLoggedIn=function(req, res, next) {

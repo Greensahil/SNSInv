@@ -1,0 +1,97 @@
+<% include ./partials/header.ejs %>
+ <!-- Masthead-->
+ <header class="masthead" style="height: 100vh;">
+    <div class="container">
+        <div class="barcode">
+            <div class="bars">
+              <div class="bar-lg"></div>
+              <div class="bar-md"></div>
+              <div class="bar-sm"></div>
+              <div class="bar-lg"></div>
+              <div class="bar-sm"></div>
+              <div class="bar-md"></div>
+              <div class="bar-md"></div>
+              <div class="bar-sm"></div>
+              <div class="bar-md"></div>
+              <div class="bar-sm"></div>
+            </div>
+            <div class="laser"></div>
+          </div>  
+        <div class="masthead-heading text-uppercase">S&S Inventory</div>
+        <div class="masthead-subheading">Start Scanning</div>
+        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#scanSection">                    
+            <i class="barcode-icon"></i>       
+        </a>
+
+       
+    </div>
+</header>
+<!-- scanSection-->
+<section class="page-section d-none" id="scanSection">
+    <div class="container">
+        <div class="text-center ">
+            <h2 class="section-heading text-uppercase">Move Inventory</h2>
+            <!-- <h3 class="section-subheading text-muted">Recent Movement History</h3> -->
+            <div class=" binMovement" style="width: 100%;">
+                <p id="currentBinScannedForMovement"></p>
+                <p id="currentBinLocation"></p>
+                <p id="newBinLocation"></p>
+                <table class="table table-striped table-sm table-dark" id="tblBinContents">
+                    <thead>
+                      <tr>
+                        <th scope="col">Key</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">ItemNum</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                     
+                    </tbody>
+                  </table>
+
+
+            </div>
+        </div>
+        <!-- <div class="row text-center">
+            <div class="col-md-4">
+                <span class="fa-stack fa-4x">
+                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="my-3">E-Commerce</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+            </div>
+            <div class="col-md-4">
+                <span class="fa-stack fa-4x">
+                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="my-3">Responsive Design</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+            </div>
+            <div class="col-md-4">
+                <span class="fa-stack fa-4x">
+                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="my-3">Web Security</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+            </div>
+        </div> -->
+    </div>
+</section>
+
+<!-- Contact-->
+<!-- <section class="page-section" id="contact">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Settings</h2>
+            <h3 class="section-subheading text-muted">Modify barcode settings</h3>
+        </div>
+       
+    </div>
+</section> -->
+
+
+<% include ./partials/footer.ejs %>

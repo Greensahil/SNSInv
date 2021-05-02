@@ -7,14 +7,19 @@
 // Global CSS
 @import "./global.scss";
 
+
 // Components
 @import "./components/buttons.scss";
 @import "./components/navbar.scss";
+@import "./components/toast.scss";
+
 
 // Sections
+@import "./sections/barcode.scss";
 @import "./sections/masthead.scss";
 @import "./sections/portfolio.scss";
 @import "./sections/timeline.scss";
 @import "./sections/team.scss";
 @import "./sections/contact.scss";
 @import "./sections/footer.scss";
+@import "./sections/login.scss";

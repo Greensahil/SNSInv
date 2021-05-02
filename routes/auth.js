@@ -49,6 +49,21 @@ router.get("/login",async (req,res)=>{
 })
 
 
+// router.post("/login", function(req,res,next){
+//     passport.authenticate("user-login", function(err,user,info){
+//         console.log(err)
+//         if(err){
+//             res.redirect("/login")
+//         }
+//         else{
+//             res.redirect("/")
+//         }
+
+
+//     })(req,res,next);
+// })
+
+
 router.post("/login",bouncer.block, passport.authenticate("user-login", {
 	successRedirect: "/",
 	failureRedirect: "/login"
