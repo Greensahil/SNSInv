@@ -31,6 +31,38 @@
  <% } %> 
  
 
+ <script type="text/javascript">
+    <% if(message && message.length >0){ %>
+        $.toast({
+                      position: 'top-right', /** top-left/top-right/top-center/bottom-left/bottom-right/bottom-center - Where the toast will show up **/
+                      dismissible: true, /** true/false - If you want to show the button to dismiss the toast manually **/
+                      stackable: true, /** true/false - If you want the toasts to be stackable **/
+                      pauseDelayOnHover: true, /** true/false - If you want to pause the delay of toast when hovering over the toast **/
+                      title:'Permission Denied',
+                      content:flashMessage,
+                      type: 'error',
+                      delay: 5000
+          });
+
+    
+    <% } %>
+    
+    <% if(success && success.length >0){ %>
+       let flashMessage = '<%- success %>';
+       $.toast({
+                    position: 'top-right', /** top-left/top-right/top-center/bottom-left/bottom-right/bottom-center - Where the toast will show up **/
+                    dismissible: true, /** true/false - If you want to show the button to dismiss the toast manually **/
+                    stackable: true, /** true/false - If you want the toasts to be stackable **/
+                    pauseDelayOnHover: true, /** true/false - If you want to pause the delay of toast when hovering over the toast **/
+                    title:'Process Complete',
+                    content:flashMessage,
+                    type: 'success',
+                    delay: 5000
+             });
+    <% } %>
+   
+    
+</script>
 
 </body>
 </html>

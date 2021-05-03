@@ -33,4 +33,24 @@ router.post("/getBinContents", middleware.isLoggedIn, async function(req, res, n
 
 })
 
+router.post("/moveBin", middleware.isLoggedIn, async function(req, res, next) {
+    try {
+        let pool = await snsInvDBConnection
+        let binNumber = req.body.binNumber
+        let row = this.body.row
+        let column = this.body.column
+        let shelf = this.body.shelf
+
+        await pool.query(`UPDATE ItemLocBCBins SET ItemLocBCBinRow='${row},ItemLocBCBinColumn = '${column}', ItemLocBCBinShelf = '${shelf}' WHERE ItemLocBCBin = '${binNumber}' '`)
+
+        res.end()
+
+    } catch (err) {
+        console.trace(err.lineNumber)
+        console.log(err)
+        next(err)
+    }
+
+})
+
 module.exports = router;
