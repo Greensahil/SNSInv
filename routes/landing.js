@@ -28,6 +28,7 @@ router.post("/getBinContents", middleware.isLoggedIn, async function(req, res, n
             throw createError('400',`<strong>${binNumber}</strong> does not exist`)
         }
 
+        console.log(`SELECT * FROM qSSInv WHERE ItemLocRow='BCBIN' AND ItemLocBCBin= '${binNumber}' ORDER BY ProductItemNum;`)
         let binContents = await pool.query(`SELECT * FROM qSSInv WHERE ItemLocRow='BCBIN' AND ItemLocBCBin= '${binNumber}' ORDER BY ProductItemNum;`)
         binContents = binContents.recordset
         res.send(binContents)
@@ -76,7 +77,6 @@ router.post("/moveBin", middleware.isLoggedIn, async function(req, res, next) {
             throw createError('400', `<strong>${binNumber}</strong> cannot be moved to <strong>${row}</strong> because it does not exist`)
         }
 
-        console.log(`UPDATE ItemLocBCBins SET ItemLocBCBinRow='${toRow}',ItemLocBCBinColumn = '${toCol}', ItemLocBCBinShelf = '${toShelf}' WHERE ItemLocBCBin = '${binNumber}'`)
 
         await pool.query(`UPDATE ItemLocBCBins SET ItemLocBCBinRow='${toRow}',ItemLocBCBinColumn = '${toCol}', ItemLocBCBinShelf = '${toShelf}' WHERE ItemLocBCBin = '${binNumber}'`)
 
@@ -99,6 +99,36 @@ router.post("/moveBin", middleware.isLoggedIn, async function(req, res, next) {
     }
 
 })
+
+router.post("/mergeBin", middleware.isLoggedIn, async function(req, res, next) {
+    try {
+        let pool = await snsInvDBConnection
+
+        let sourceRow = req.body.sourceRow
+        let sourceCol = req.body.sourceCol
+        let sourceShelf = req.body.sourceShelf
+        let sourceBin = req.body.sourceBin
+
+        let destinationRow = req.body.destinationRow
+        let destinationCol = req.body.destinationCol
+        let destinationShelf = req.body.destinationShelf
+        let destinationBin = req.body.destinationBin
+
+        console.log(sourceRow, sourceCol, sourceShelf, sourceBin)
+        console.log(destinationRow, destinationCol, destinationShelf, destinationBin)
+
+
+        
+        res.end()
+
+    } catch (err) {
+        console.trace(err.lineNumber)
+        console.log(err)
+        next(err)
+    }
+
+})
+
 
 
 function getFullLocationForBCBin(row, col, shelf, bcBin){

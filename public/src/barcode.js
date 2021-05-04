@@ -1,4 +1,6 @@
-let glbCurrentBinScanned //This will keep track of current bin that is scanned
+
+// let glbCurrentBinScanned //This will keep track of current bin that is scanned
+let glbBarcodeMemoryArr = [] 
 const defaultBarcodeProperties = {
     prefix:"02",
     suffix:"09"
@@ -10,7 +12,7 @@ onScan.attachTo(document, {
     prefixKeyCodes: [], // start of text ascii
     suffixKeyCodes: [], // tab expected at the end of a scan
     reactToPaste: true, // Compatibility to built-in scanners in paste-mode (as opposed to keyboard-mode)
-    avgTimeByChar:30,
+    avgTimeByChar:90,
     minLength:4,
     keyCodeMapper: function(oEvent) {
     
@@ -24,6 +26,10 @@ onScan.attachTo(document, {
         }
         if (oEvent.which == 9) {  
             return '09';
+        }
+        //The samsung device which returns 18 when ascii 02 is scanned so.
+        if (oEvent.which == 18) {  
+            return '02';
         }
         // Fall back to the default decoder in all other cases
         return onScan.decodeKeyEvent(oEvent);
@@ -46,6 +52,7 @@ onScan.attachTo(document, {
 class Barcode{
     constructor(barcodeReadWithPrefixAndSuffix){
         this.barcodeReadWithPrefixAndSuffix = barcodeReadWithPrefixAndSuffix
+        
     }
 
     get barcode(){
@@ -82,7 +89,7 @@ class Bin{
         this.binNumber = binNumber
         this.newLocation = objMoveToLocation
         this.currentLocation //Current location is determined by the BIN object iteself
-
+        this.binContents
         //Each new bin scan resets to move to location as you can see above
         //This should therefore also refresh the HTML text in the front end
         $("#newBinLocation").html("")
@@ -100,7 +107,7 @@ class Bin{
         });
     }
 
-    displayBinContents(){
+    setUpBinContentsAndCurrentLocation(blnDisplayContents){
         $.ajax({
             type:"POST",
             url:"/getBinContents",
@@ -119,35 +126,38 @@ class Bin{
                     createGenericMessage("Empty Bin Detected", "Please scan a bin with contents",'warning')
                     return
                 }
-
-                console.log(binContents)
-
-                this.displayContainerForBinMovement()
-
-                this.currentLocation = new Location({locRow:binContents[0].VLocRow, locCol:binContents[0].VLocColumn, locShelf:binContents[0].VLocShelf})
-                
-                tblBinContents.clear().draw()
-                $(".binMovement").removeClass("d-none")
-                $("#currentBinScannedForMovement").html(`Bin scanned <i class="fas fa-box-open ml-2"></i> <strong>${this.binNumber}</strong>`)
-                $("#currentBinLocation").text(`Current Location Row ${binContents[0].VLocRow}, Column ${binContents[0].VLocColumn}, Shelf ${binContents[0].VLocShelf}`)
-
-                for(let item of binContents){
-                    tblBinContents.row.add($(`
-                        <tr>
-                            <td>${item.SSInvID}</td>
-                            <td>${item.QuantityAvailable}</td>
-                            <td>${item.ProductItemNum}</td>
-                            <td>${item.ShortDescription}</td>
-                        </tr>
-                    `))
+                this.binContents = binContents
+                this.currentLocation = new Location({locRow:binContents[0].VLocRow, locCol:binContents[0].VLocColumn, locShelf:binContents[0].VLocShelf})     
+                if(blnDisplayContents){
+                    this._displayBinContents()
                 }
-
-                //tblBinContents.responsive.recalc();
-                tblBinContents.draw()
-
-                
             }
         })
+
+
+    }
+
+    //do not call this function directly as the contents might not have been delivered as the contents are from ajax request
+    _displayBinContents(){
+        this.displayContainerForBinMovement()
+        tblBinContents.clear().draw()
+        $(".binMovement").removeClass("d-none")
+        $("#currentBinScannedForMovement").html(`Bin scanned <i class="fas fa-box-open ml-2"></i> <strong>${this.binNumber}</strong>`)
+        $("#currentBinLocation").text(`Current Location Row ${this.binContents[0].VLocRow}, Column ${this.binContents[0].VLocColumn}, Shelf ${this.binContents[0].VLocShelf}`)
+
+        for(let item of this.binContents){
+            tblBinContents.row.add($(`
+                <tr>
+                    <td>${item.SSInvID}</td>
+                    <td>${item.QuantityAvailable}</td>
+                    <td>${item.ProductItemNum}</td>
+                    <td>${item.ShortDescription}</td>
+                </tr>
+            `))
+        }
+
+        //tblBinContents.responsive.recalc();
+        tblBinContents.draw()
     }
 
 
@@ -177,8 +187,12 @@ class Bin{
                     easing: 'easeInOutSine'
                 });
                 createGenericMessage('Bin has moved to new location',`<strong>${this.binNumber}</strong> has been moved`,'success')
+
+                //Change display to reflect new bin info
+                $("#newBinLocation").html("")
+                $("#currentBinLocation").text(`Current Location Row ${this.newLocation.row}, Column ${this.newLocation.col}, Shelf ${this.newLocation.shelf}`)
                 //Initliaze a new bin so that the bin info is refreshed
-                intializeBinObject(this.binNumber)
+                //intializeBinObject(this.binNumber)
 
         
                 
@@ -258,23 +272,28 @@ function handleBarcode(objBarcode){
     else if(objBarcode.barcodeType == "LOC"){
         //If the location is scanned but a bin is yet to be scanned just return null
         //strigifying the objects so that is compares the contents rather than the address in the memory
-        if(JSON.stringify(glbCurrentBinScanned) == JSON.stringify({})){
-            createGenericMessage('Location Scanned Ignored','The location scanned has been ignored because a bin has not been scanned yet','warning')
+        
+        let lastObjectScanned = getLastObjectScanned()
+        if(!(lastObjectScanned instanceof Bin)){
+            createGenericMessage('Location Scanned Ignored','The location scanned has been ignored because the last object scanned was not a bin','warning')
             return
         }
 
-        let objLocation = new Location({locationBarcode:objBarcode.barcode})
 
+        let objLocation = new Location({locationBarcode:objBarcode.barcode})
         //Check to see if the current bin location is not the same as new location
-        if(JSON.stringify(glbCurrentBinScanned.currentLocation) == JSON.stringify(objLocation)){
+        if(JSON.stringify(lastObjectScanned.currentLocation) == JSON.stringify(objLocation)){
             createGenericMessage('Move Cancelled', 'You tried to move the bin to the location it is currently in','warning')
             return
         }
 
+        pushObjectToGlobalMemoryArray(objLocation)
         objLocation.displayContainerForToLoc()
-        glbCurrentBinScanned.newLocation = objLocation
+
+        //At this point we know that the previous object that was scanned before the location was a bin. So set the new location of that bin and move it
+        lastObjectScanned.newLocation = objLocation
         //Move the bin
-        glbCurrentBinScanned.moveBin()
+        lastObjectScanned.moveBin()
     
         
     }
@@ -284,9 +303,64 @@ function handleBarcode(objBarcode){
 }
 
 function intializeBinObject(binNumber){
+
+        let lastObjectScanned = getLastObjectScanned()
         let objBin = new Bin({binNumber:binNumber})
-        objBin.displayBinContents()
-        glbCurrentBinScanned = objBin
+        pushObjectToGlobalMemoryArray(objBin)
+
+        if(!(lastObjectScanned instanceof Bin)){
+            //Last object scanned was not a bin so just display the contents of this bin
+            objBin.setUpBinContentsAndCurrentLocation(true)
+            return
+        }
+
+        //Last object that was scanned was a bin
+        //Was it the same bin?
+        if(JSON.stringify(lastObjectScanned) == JSON.stringify(objBin)){
+            createGenericMessage('Ignoring Scan','Ignoring scan because you scanned the same bin twice', 'warning')
+            return
+        }
+
+        //This means that the user wants to merge bin
+        // objBin.setUpBinContentsAndCurrentLocation()
+        mergebin(lastObjectScanned,objBin)
+
+
+        //glbCurrentBinScanned = objBin
+}
+
+
+
+function mergebin(objSourceBin, objDestinationBin){
+    //There are 2 reason why I am not sending the bin info and letting backend handle it.
+        //1. The bin info might have changed
+        //2. There is no gurantee that the source or destination has the bin info loaded by the ajax request.
+
+
+    // let sourceRow = objSourceBin.currentLocation.row
+    // let sourceCol = objSourceBin.currentLocation.col
+    // let sourceShelf = objSourceBin.currentLocation.shelf
+    let sourceBin = objSourceBin.binNumber
+
+    // let destinationRow = objDestinationBin.currentLocation.row
+    // let destinationCol = objDestinationBin.currentLocation.col
+    // let destinationShelf = objDestinationBin.currentLocation.shelf
+    let destinationBin = objDestinationBin.binNumber
+
+
+    $.ajax({
+        type:"POST",
+        url:"/mergeBin",
+        data:{
+            sourceBin,
+            destinationBin
+        },
+        success:function(data){
+            createGenericMessage('Bin Merged', `Contents of bin <strong>${sourceBin}</strong> has been transferred to destination bin <strong>${destinationBin}</strong>`,'success')
+        }
+    })
+
+
 }
 
 
@@ -306,4 +380,21 @@ function validateBarcodeSuffixAndPrefix(rawBarcodeScanned){
     }
 
     return true
+}
+
+function pushObjectToGlobalMemoryArray(obj){
+    //The array should only store the last 2 objects that were scanned. Since I am shifting it the array should not have more than 2 items but just in case
+    glbBarcodeMemoryArr = glbBarcodeMemoryArr.splice(-2)
+
+    //If the array only has 1 item in it then just push it else make room
+    if(glbBarcodeMemoryArr.length == 2){
+        //remove the first element and shift all other elements to left
+        glbBarcodeMemoryArr.shift()
+    }
+    glbBarcodeMemoryArr.push(obj)
+}
+
+function getLastObjectScanned(){
+    //The last object that was scanned should be the last item of the array unless the array at this point in time only has one item in it
+    return glbBarcodeMemoryArr[1]?glbBarcodeMemoryArr[1]:glbBarcodeMemoryArr[0]
 }
