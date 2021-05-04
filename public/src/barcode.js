@@ -1,10 +1,15 @@
 
 // let glbCurrentBinScanned //This will keep track of current bin that is scanned
-let glbBarcodeMemoryArr = [] 
+let glbBarcodeMemoryArr = []
+
+let glbOnTabletOrPhone = window.mobileAndTabletCheck()
+
 const defaultBarcodeProperties = {
     prefix:"02",
     suffix:"09"
 }
+
+
 
 onScan.attachTo(document, {
     //This library ignores the predix and suffix that is entered here. Check the lib code to see what it ignores by default
@@ -28,7 +33,12 @@ onScan.attachTo(document, {
             return '09';
         }
         //The samsung device which returns 18 when ascii 02 is scanned so.
-        if (oEvent.which == 18) {  
+        if (oEvent.which == 18) {
+            if(glbOnTabletOrPhone){
+                return '02';    
+            }
+        }
+        if (oEvent.which == 2) {  
             return '02';
         }
         // Fall back to the default decoder in all other cases

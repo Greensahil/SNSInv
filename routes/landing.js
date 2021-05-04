@@ -86,7 +86,7 @@ router.post("/moveBin", middleware.isLoggedIn, async function(req, res, next) {
         let oldLocation = getFullLocationForBCBin(fromRow, fromCol, fromShelf,binNumber)
         let newLocation = getFullLocationForBCBin(toRow, toCol, toShelf,binNumber)
         
-        if(!await database.createAudit("INV","Location",oldLocation,newLocation,ssInvID,"Move BC Bin",req.user.UserName)){
+        if(!await database.createAudit("INV","Location",oldLocation,newLocation,ssInvID,"Move BC Bin",req.user.UserID)){
             throw createError('422','Movement of bin was successful but could not create audit. Please contact admin')
         }
 
