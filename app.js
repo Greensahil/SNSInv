@@ -84,10 +84,11 @@ app.use(async function (req, res, next) {
 
 const landing = require('./routes/landing.js');
 const authenticate = require('./routes/auth.js')
-
+const profile = require('./routes/profile')
 
 app.use(landing)
 app.use(authenticate)
+app.use(profile)
 
 
 //Custom error handling middleware. Express will not use its default error handling middleware if this is present

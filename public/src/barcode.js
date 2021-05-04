@@ -1,8 +1,14 @@
 let glbCurrentBinScanned //This will keep track of current bin that is scanned
+const defaultBarcodeProperties = {
+    prefix:"02",
+    suffix:"09"
+}
 
 onScan.attachTo(document, {
-    prefixKeyCodes: [02], // start of text ascii
-    suffixKeyCodes: [09], // tab expected at the end of a scan
+    //This library ignores the predix and suffix that is entered here. Check the lib code to see what it ignores by default
+    //I found inconsistent results so, I will parse the barcode myself so telling it to not ignore anything
+    prefixKeyCodes: [], // start of text ascii
+    suffixKeyCodes: [], // tab expected at the end of a scan
     reactToPaste: true, // Compatibility to built-in scanners in paste-mode (as opposed to keyboard-mode)
     avgTimeByChar:30,
     minLength:4,
@@ -16,7 +22,9 @@ onScan.attachTo(document, {
         if (oEvent.which == 220) {  
             return '\\';
         }
-        
+        if (oEvent.which == 9) {  
+            return '09';
+        }
         // Fall back to the default decoder in all other cases
         return onScan.decodeKeyEvent(oEvent);
     },
@@ -33,14 +41,16 @@ onScan.attachTo(document, {
    
 });
 
+//It is not a good pratice to validate object parameters while creating a class inside the class itself. It is always recommended to fail as early as possible
+//If the barcode object is being initialized, the class assumes that at least the barcodeReadWithPrefixAndSuffix was checked for appropriate prefix, suffix and length
 class Barcode{
     constructor(barcodeReadWithPrefixAndSuffix){
         this.barcodeReadWithPrefixAndSuffix = barcodeReadWithPrefixAndSuffix
     }
 
     get barcode(){
-        //Start by removing prefix from the barcodeRead
         let strBarcodeRead = this.barcodeReadWithPrefixAndSuffix.substring(3)
+        strBarcodeRead = strBarcodeRead.substring(0, strBarcodeRead.length-2)
         return strBarcodeRead
     }
 
@@ -72,6 +82,10 @@ class Bin{
         this.binNumber = binNumber
         this.newLocation = objMoveToLocation
         this.currentLocation //Current location is determined by the BIN object iteself
+
+        //Each new bin scan resets to move to location as you can see above
+        //This should therefore also refresh the HTML text in the front end
+        $("#newBinLocation").html("")
     }
 
     displayContainerForBinMovement(){
@@ -101,11 +115,12 @@ class Bin{
             //So while searching for this which is not present in current scope they end up finding this from its enclosing scope.
 
             success:(binContents)=>{
-
                 if(binContents.length==0){
                     createGenericMessage("Empty Bin Detected", "Please scan a bin with contents",'warning')
                     return
                 }
+
+                console.log(binContents)
 
                 this.displayContainerForBinMovement()
 
@@ -147,14 +162,26 @@ class Bin{
             url:"/moveBin",
             data:{
                 binNumber:this.binNumber,
-                newRow:this.newLocation.row,
-                newCol:this.newLocation.col,
-                newShelf:this.newLocation.shelf
+                fromRow:this.currentLocation.row,
+                fromCol:this.currentLocation.col,
+                fromShelf:this.currentLocation.shelf,
+                toRow:this.newLocation.row,
+                toCol:this.newLocation.col,
+                toShelf:this.newLocation.shelf
             },
-            success:function(){
-                createGenericMessage('Bin has moved to new location')
+            success:()=>{
+                anime({
+                    targets: '#currentBinScannedForMovement',
+                    translateX: 250,
+                    direction: 'alternate',
+                    easing: 'easeInOutSine'
+                });
+                createGenericMessage('Bin has moved to new location',`<strong>${this.binNumber}</strong> has been moved`,'success')
                 //Initliaze a new bin so that the bin info is refreshed
-                intializeBinObject({binNumber:this.binNumber})
+                intializeBinObject(this.binNumber)
+
+        
+                
             }
         })
 
@@ -164,7 +191,7 @@ class Bin{
 class Location{
     //Location can be made from barcode or it can be made from locCol, row and shelf
     constructor({locationBarcode, locCol, locRow, locShelf}={}){
-
+        //FIX ME: BAD practice, verrify location before instansiation
         if(locationBarcode){
             if(!this.verifyLocationBarcode(locationBarcode)){
                 return //Error thrown by the method called
@@ -190,6 +217,7 @@ class Location{
         
     }
 
+    //FIX ME: BAD practice, verrify location before instansiation
     verifyLocationBarcode(locationBarcode){
         //FIX ME Add other checks here because tow backslahes should not be consequite, make ajax request to make sure location exists etc
         //Check to make sure that the location is valid i.e just because the barcode started with * does not mean valid location
@@ -210,20 +238,17 @@ class Location{
             duration: 1000,
             easing: 'easeInOutExpo'
         });
-        createGenericMessage(`Move To Location Set`,`New location <strong>Row: ${this.row}, Column : ${this.col}</strong>, <strong>Shelf: ${this.shelf}</strong>`,'success')
+        //createGenericMessage(`Move To Location Set`,`New location <strong>Row: ${this.row}, Column : ${this.col}</strong>, <strong>Shelf: ${this.shelf}</strong>`,'success')
         $("#newBinLocation").html(`Location Selected For Movement <strong>Row: ${this.row}, Column : ${this.col}</strong>, <strong>Shelf: ${this.shelf}</strong>`)
     }
 
-    // displayContainerForToLoc(){
-    //     this.displayContainerForToLoc
-        
-    // }
 }
 
 function createAndHandleBarcodeObject(sCode){
-    //FIX ME : ADD Validation here so that we only create objects if the barcode scanned is valid
-    let objBarcode = new Barcode(sCode)
-    handleBarcode(objBarcode)
+    if(validateBarcodeSuffixAndPrefix(sCode)){
+        let objBarcode = new Barcode(sCode)
+        handleBarcode(objBarcode)
+    }
 }
  
 function handleBarcode(objBarcode){
@@ -231,21 +256,30 @@ function handleBarcode(objBarcode){
         intializeBinObject(objBarcode.barcode)
     }
     else if(objBarcode.barcodeType == "LOC"){
-        let objLocation = new Location({locationBarcode:objBarcode.barcode})
-        objLocation.displayContainerForToLoc()
-        glbCurrentBinScanned.newLocation = objLocation
-
-        //If they just scanned a location without scanning a bin just display the location
+        //If the location is scanned but a bin is yet to be scanned just return null
         //strigifying the objects so that is compares the contents rather than the address in the memory
         if(JSON.stringify(glbCurrentBinScanned) == JSON.stringify({})){
+            createGenericMessage('Location Scanned Ignored','The location scanned has been ignored because a bin has not been scanned yet','warning')
             return
         }
 
+        let objLocation = new Location({locationBarcode:objBarcode.barcode})
+
+        //Check to see if the current bin location is not the same as new location
+        if(JSON.stringify(glbCurrentBinScanned.currentLocation) == JSON.stringify(objLocation)){
+            createGenericMessage('Move Cancelled', 'You tried to move the bin to the location it is currently in','warning')
+            return
+        }
+
+        objLocation.displayContainerForToLoc()
+        glbCurrentBinScanned.newLocation = objLocation
         //Move the bin
         glbCurrentBinScanned.moveBin()
+    
         
-
-        
+    }
+    else{
+        createGenericMessage("Neither BIN OR LOC WAS Scanned", "Please scan a bin or  location", "error")
     }
 }
 
@@ -253,4 +287,23 @@ function intializeBinObject(binNumber){
         let objBin = new Bin({binNumber:binNumber})
         objBin.displayBinContents()
         glbCurrentBinScanned = objBin
+}
+
+
+function validateBarcodeSuffixAndPrefix(rawBarcodeScanned){
+    //Start by removing prefix from the barcodeRead
+    //Check to make sure that the suffix of ASCII 02 and Prefix of ASCII is there
+    let prefix =rawBarcodeScanned.substring(0,2)
+    let suffix = rawBarcodeScanned.substring(rawBarcodeScanned.length-2,rawBarcodeScanned.length)
+
+    if(prefix != defaultBarcodeProperties.prefix){
+        createGenericMessage('INVALID BARCODE','PREFIX 02 NOT DETECTED','error')
+        return false
+    }
+    if(suffix != defaultBarcodeProperties.suffix){
+        createGenericMessage('INVALID BARCODE','SUFFIX 09 NOT DETECTED','error')
+        return false
+    }
+
+    return true
 }

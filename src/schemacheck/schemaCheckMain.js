@@ -117,7 +117,7 @@ async function UpdateSchema_0_0_1() {
         //FIX ME - REMOVE IN PRODUCTION
         await request.query(`
         INSERT INTO USERS(UserID, UserName, PIN)
-        VALUES('Admin','Admin', 9874);`)    
+        VALUES('WebAdmin','Admin', 9874);`)    
 
         await SetSchemaVersion("0.0.1")
 

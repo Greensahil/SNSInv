@@ -7,6 +7,7 @@ const tblBinContents = $('#tblBinContents').DataTable({
    
     "paging":   false,
     "searching":   false,
+    // "ordering":false,
     // "info":     false,
     //This bascailly clearouts the search bar on page refresh. Chrome fills it up on page refresh sometimes with saved username or password
     initComplete: function() {

@@ -43,9 +43,11 @@
             $("#mainNav").removeClass("navbar-shrink");
         }
     };
+
     // Collapse now if page is not at top
     navbarCollapse();
     // Collapse the navbar when page is scrolled
-    $(window).on('scroll', navbarCollapse);
-
+    if(window.location.pathname != "/profile/" && window.location.pathname != "/profile"){
+        $(window).on('scroll', navbarCollapse);
+    } 
 })(jQuery); // End of use strict

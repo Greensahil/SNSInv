@@ -1,0 +1,30 @@
+<% include ./partials/header.ejs %>
+
+<div class="jumbotron">
+    <h1 class="display-4 mt-3">Profile</h1>
+    <p class="lead">View your audit History below.</p>
+    <hr class="my-4">
+    <table class="table table-striped table-sm table-dark" id="tblUserAudit">
+        <thead>
+          <tr>
+            <th scope="col">TimeStamp</th>
+            <th scope="col">FieldName</th>
+            <th scope="col">OldValue</th>
+            <th scope="col">NewValue</th>
+            <th scope="col">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+         
+        </tbody>
+    </table>
+  </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        populateAuditHistory(<%- JSON.stringify(userAudit) %>)
+    })
+</script>
+
+<% include ./partials/footer.ejs %>

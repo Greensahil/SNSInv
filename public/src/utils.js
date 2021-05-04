@@ -27,9 +27,9 @@ $(function() {
                 type: 'error',
                 delay: 5000
             });
-            HideLoadingAnimation() //We use this function to hide loading animations in various pages. So running this function so that the loading animation does not reamin there
+           
 
-            if(window.location.pathname == "/qcUnknownBarcode" || window.location.pathname == "/qcUnknownBarcode/" ){
+            if(window.location.pathname == "/landing" || window.location.pathname == "/landing/" ){
                 let failureAudio = new Audio('/sounds/failure.wav')
                 failureAudio.play()
             }
@@ -39,3 +39,12 @@ $(function() {
         }
     });
 });
+
+
+//FIX ME: IGNORE TAB WITHOUT THIS TAB KEY IS PRESSED SINCE IT ENDS WITH TAB
+//WILL NEED TO FIX THE OSCAN LIB
+$(document).keydown(function(objEvent) {
+    if (objEvent.keyCode == 9) {  //tab pressed
+        objEvent.preventDefault(); // stops its action
+    }
+})
